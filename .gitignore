@@ -1,0 +1,6 @@
+*.o
+*.cproject
+*.project
+*.sconsign.dblite
+agml
+test/test
