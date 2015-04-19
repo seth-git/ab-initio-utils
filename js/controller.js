@@ -21,7 +21,7 @@
 		vm.toggleShow = toggleShow;
 
 		vm.pages = pages;
-		toggleShow(vm.pages[vm.pages.length-1]);
+		toggleShow(vm.pages[0]);
 
 		function toggleShow(page) {
 			page.show = !page.show;
