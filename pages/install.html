@@ -1,0 +1,52 @@
+<div>
+	1. Install needed packages
+	<br/>
+	2. Compile the program and run the unit tests
+	<br/>
+	<br/>
+	Step 1: The following packages are needed by the program which is written in C++:
+	<div class="indented">
+		g++<br/>
+		python<br/>
+		scons<br/>
+		mpi-default-bin<br/>
+		mpi-default-dev<br/>
+	</div>
+	<br/>
+	On many Linux systems, you can install the above packages by typing the Linux command:
+	<div class="indented">apt get your_package_name</div>
+	<br/>
+	Or you can use the 'Synaptic Package Manager' which is also available on many Linux distributions.
+	<br/>
+	<br/>
+	Step 2: After downloading the program, extract the contained aui folder using a Linux archive manager, or by typing the following in a Linux terminal:
+	<div class="indented">
+		gunzip aiu.tar.gz<br/>
+		tar -xf aiu.tar<br/>
+	</div>
+	<br/>
+	Then, navigate into the directory: 
+	<div class="indented">cd aui</div>
+	<br/>
+	Then compile the program by typing: 
+	<div class="indented">scons</div>
+	<br/>
+	You may see warning messages. If so, this is OK. If you see error messages, this is NOT OK, and it likely means you do not have the right packages installed (see step 1). Also note that older versions of g++ may not work and that you may need a more recent version. The program has been tested and compiles with g++ 4.6.1 and later versions.
+	<br/>
+	<br/>
+	Download <a href="http://cclib.github.io/">cclib</a> and follow the instructions to install it. Copy the aiu/externalEnergy/atomicGlobalMin.py file to the directory where you installed cclib.
+	<br/>
+	<br/>
+	Navigate to the aiu/test directory and type 'scons' to compile the unit tests, then type './test' to run them. If all the tests pass, you have successfully installed the program.
+	<br/>
+	<br/>
+	To run a batch input file type '..' to navigate out of the test directory. Then type the following:
+	<div class="indented">./agml xml/LJ7_Batch.xml</div>
+	<br/>
+	This generates 100 random LJ7 structures, calculates their energy values, and stores them back in the xml file. To perform the same run again, you must first delete the resume and result elements from the xml/LJ7_Batch.xml file.
+	<br/>
+	<br/>
+	To run the same job in parallel on two processors, type the following:
+	<div class="indented">mpirun -np 2 agml xml/LJ7_Batch.xml</div>
+</div>
+

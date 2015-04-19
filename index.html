@@ -1,0 +1,25 @@
+<!doctype html>
+<html ng-app="ab-initio-utils">
+<head>
+	<meta charset="UTF-8">
+	<title>Ab Initio Utils</title>
+	<link href="css/styles.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/angular.min.js"></script>
+	<script type="text/javascript" src="js/controller.js"></script>
+</head>
+<body ng-controller="Controller as utils">
+	<h1>Ab Initio Utils</h1>
+	<div class="main">
+		<ol style="list-style-type: upper-roman">
+			<li ng-repeat="page in utils.pages">
+				<a ng-click="utils.toggleShow(page)" href="#">{{::page.title}}</a>
+				<div class="page" ng-show="page.show" ng-include="::'pages/' + page.key + '.html'"></div>
+			</li>
+		</ol>
+	</div>
+</body>
+</html>
+	</div>
+</body>
+</html>
