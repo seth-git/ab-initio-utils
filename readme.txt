@@ -1,15 +1,17 @@
-Ab Initio Utils: Batch Processor
+Ab Initio Utils
 
-Description
+This program performs calculations on small molecules or atomic clusters using ab initio techniques. It features a batch processor that reads geometries from quantum chemistry output files or generates them randomly. It then recalculates their energies on a Linux Cluster with MPI. This code was written to support global minimum searching and/or molecular dynamics calculations. Since performing such calculations efficiently in parallel is non-trivial, this code base is intended to simplify the process.
 
-The batch program can generate random structures or read them from the output files of various quantum chemistry programs. It can run on a single computer or on a Unix cluster with MPI. The input file is a simple XML format. Below is an example:
+The program uses XML which serves two purposes. First, it simplifies the input file, since XML can describe a complex request consicely. Second, the results are also stored in XML. In fact, the program's entire data structures can be written with XML which makes them serializable. This allows the program to more easily send messages between MPI processes, facilitating greater efficiency. The program uses a <a href="http://rapidxml.sourceforge.net/">Rapid XML</a> parser which was designed for memory efficiency and speed.
+
+Below is an example batch input file. It reads NWChem output files and performs a new set of calculations on their geometries using Gaussian.
 <?xml version="1.0" encoding="utf-8"?>
 <agml version="2.0" xmlns="http://sourceforge.net/projects/atomicglobalmin/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://sourceforge.net/projects/atomicglobalmin/ agml.xsd">
 	<batch>
 		<setup>
 			<structuresTemplate>
 				<seed>
-					<directory path="/some/directory" type="GAUSSIAN"/>
+					<directory path="/some/directory/with/output/files" type="NWChem"/>
 				</seed>
 			</structuresTemplate>
 		</setup>
@@ -25,9 +27,10 @@ The batch program can generate random structures or read them from the output fi
 				]]></header>
 			</external>
 		</energy>
-		<results rmsDistance="0.00001"/>
 	</batch>
 </agml>
+
+Thus far, the software can create input files for GAMESS-US, GAMESS-UK, Gaussian, and NWChem. It uses <a href="http://cclib.github.io/">cclib</a> to read output files in the following formats: ADF, Firefly(PC GAMESS), GAMESS-US, GAMESS-UK, Gaussian, Jaguar, Molpro, and ORCA. This software represents a partial rewrite of the <a href="http://sourceforge.net/projects/atomicglobalmin/">Atomic Global Minimum Locator</a>.
 
 Installation Instructions
 
