@@ -24,7 +24,7 @@ bool Nwchem::createInputFile(const char* inputFileName, const Structure &structu
 	atoms.reserve(n*80);
 	for (i = 0; i < n; ++i) {
 		coordinate = *coordinates[i];
-		snprintf(buffer, sizeof(buffer), "%-2s %0.6lf %0.6lf %0.6lf\n", Handbook::getAtomicSymbol(atomicNumbers[i]), coordinate[0], coordinate[1], coordinate[2]);
+		snprintf(buffer, sizeof(buffer), "  %-2s %0.6lf %0.6lf %0.6lf\n", Handbook::getAtomicSymbol(atomicNumbers[i]), coordinate[0], coordinate[1], coordinate[2]);
 		atoms.append(buffer);
 	}
 

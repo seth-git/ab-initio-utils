@@ -6,16 +6,51 @@
 <xs:element name="agml">
 	<xs:complexType>
 		<xs:choice>
-			<xs:element name="simulatedAnnealing" type="simulatedAnnealingType"/>
-			<xs:element name="randomSearch" type="randomSearchType"/>
-			<xs:element name="particleSwarmOptimization" type="psoType"/>
-			<xs:element name="geneticAlgorithm" type="gaType"/>
 			<xs:element name="batch" type="batchType"/>
+			<xs:element name="simulatedAnnealing" type="simulatedAnnealingType"/>
 		</xs:choice>
 		<xs:attribute name="version" type="xs:string" use="required"/>
 		<xs:attribute name="language" type="xs:string" default="en"/>
 	</xs:complexType>
 </xs:element>
+
+<xs:complexType name="batchType">
+	<xs:sequence>
+		<xs:element name="setup">
+			<xs:complexType>
+				<xs:all>
+					<xs:element name="structuresTemplate" type="structuresTemplateType"/>
+				</xs:all>
+				<xs:attribute name="saveFrequency" type="xs:positiveInteger" default="1"/>
+			</xs:complexType>
+		</xs:element>
+		<xs:element name="constraints" type="constraintsType" minOccurs="0" maxOccurs="unbounded"/>
+		<xs:element name="energy" type="energyType"/>
+		<xs:element name="resume" minOccurs="0">
+			<xs:complexType>
+				<xs:all>
+					<xs:element name="totalEnergyCalculations">
+						<xs:complexType>
+							<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="elapsedSeconds">
+						<xs:complexType>
+							<xs:attribute name="value" type="xs:unsignedLong" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="runComplete">
+						<xs:complexType>
+							<xs:attribute name="value" type="xs:boolean" use="required"/>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="structures" type="structuresType"/>
+				</xs:all>
+			</xs:complexType>
+		</xs:element>
+		<xs:element name="results" type="resultsType" minOccurs="0"/>
+	</xs:sequence>
+</xs:complexType>
 
 <xs:complexType name="simulatedAnnealingType">
 	<xs:sequence>
@@ -40,6 +75,7 @@
 	<xs:attribute name="name" type="xs:string" use="required"/>
 	<xs:attribute name="base" type="xs:string"/>
 </xs:complexType>
+
 <xs:complexType name="atomicDistancesType">
 	<xs:sequence>
 		<xs:element name="min" minOccurs="0" maxOccurs="unbounded">
@@ -348,302 +384,6 @@
 	<xs:attribute name="isTransitionState" type="xs:boolean" default="false"/>
 	<xs:attribute name="id" type="xs:integer" default="0"/>
 	<xs:attribute name="filePrefix" type="xs:string"/>
-</xs:complexType>
-
-
-<xs:complexType name="randomSearchType">
-	<xs:sequence>
-		<xs:element name="setup" type="randomSearchSetupType"/>
-		<xs:element name="constraints" type="constraintsType" minOccurs="0" maxOccurs="unbounded"/>
-		<xs:element name="energy" type="energyType"/>
-		<xs:element name="resume" type="randomSearchResumeType" minOccurs="0"/>
-		<xs:element name="results" type="resultsType" minOccurs="0"/>
-	</xs:sequence>
-	<xs:attribute name="nonFragmentedSearch" type="xs:boolean" default="true"/>
-	<xs:attribute name="constraints" type="xs:string"/>
-</xs:complexType>
-<xs:complexType name="randomSearchSetupType">
-	<xs:all>
-		<xs:element name="structuresTemplate" type="structuresTemplateType"/>
-		<xs:element name="perturbations" type="simulatedAnnealingPerturbationsType"/>
-		<xs:element name="stop">
-			<xs:complexType>
-				<xs:attribute name="iteration" type="xs:positiveInteger"/>
-			</xs:complexType>
-		</xs:element>
-	</xs:all>
-	<xs:attribute name="saveFrequency" type="xs:positiveInteger" default="1"/>
-</xs:complexType>
-<xs:complexType name="randomSearchResumeType">
-	<xs:all>
-		<xs:element name="iteration">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="totalEnergyCalculations">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="elapsedSeconds">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="runComplete">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:boolean" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="structures" type="structuresType"/>
-	</xs:all>
-</xs:complexType>
-
-<xs:complexType name="psoType">
-	<xs:sequence>
-		<xs:element name="setup" type="psoSetupType"/>
-		<xs:element name="constraints" type="constraintsType" minOccurs="0" maxOccurs="unbounded"/>
-		<xs:element name="energy" type="energyType"/>
-		<xs:element name="resume" type="psoResumeType" minOccurs="0"/>
-		<xs:element name="results" type="resultsType" minOccurs="0"/>
-	</xs:sequence>
-	<xs:attribute name="constraints" type="xs:string"/>
-</xs:complexType>
-<xs:complexType name="psoSetupType">
-	<xs:all>
-		<xs:element name="structuresTemplate" type="structuresTemplateType"/>
-		<xs:element name="velocities">
-			<xs:complexType>
-				<xs:all>
-					<xs:element name="coordinate" type="psoVelocityType"/>
-					<xs:element name="angle" type="psoVelocityType" minOccurs="0"/>
-				</xs:all>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="visibility">
-			<xs:complexType>
-				<xs:attribute name="start" type="xs:string" default="auto"/>
-				<xs:attribute name="increment" type="nonNegativeDecimal" default="0"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="repulsion" minOccurs="0">
-			<xs:complexType>
-				<xs:all>
-					<xs:element name="start">
-						<xs:complexType>
-							<xs:attribute name="diversity" type="positiveDecimal" use="required"/>
-							<xs:attribute name="improvementIterations" type="xs:positiveInteger"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="stop">
-						<xs:complexType>
-							<xs:attribute name="diversity" type="positiveDecimal" use="required"/>
-						</xs:complexType>
-					</xs:element>
-				</xs:all>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="bestMemory" minOccurs="0">
-			<xs:complexType>
-				<xs:attribute name="updateIndividual" type="positiveDecimal" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="minDistanceConstraints" minOccurs="0">
-			<xs:complexType>
-				<xs:attribute name="applyOnCopy" type="xs:boolean" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="stop" minOccurs="0">
-			<xs:complexType>
-				<xs:attribute name="iteration" type="xs:positiveInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-	</xs:all>
-	<xs:attribute name="saveFrequency" type="xs:positiveInteger" default="1"/>
-</xs:complexType>
-
-
-<xs:complexType name="psoVelocityType">
-	<xs:all>
-		<xs:element name="inertia">
-			<xs:complexType>
-				<xs:attribute name="value" type="positiveDecimal" default="0.95"/>
-				<xs:attribute name="endValue" type="positiveDecimal"/>
-				<xs:attribute name="endIteration" type="xs:positiveInteger"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="cp">
-			<xs:complexType>
-				<xs:attribute name="value" type="nonNegativeDecimal" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="ci">
-			<xs:complexType>
-				<xs:attribute name="value" type="nonNegativeDecimal" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="vMax" minOccurs="0">
-			<xs:complexType>
-				<xs:attribute name="value" type="nonNegativeDecimal" use="required"/>
-			</xs:complexType>
-		</xs:element>
-	</xs:all>
-</xs:complexType>
-
-<xs:complexType name="psoResumeType">
-	<xs:all>
-		<xs:element name="visibility">
-			<xs:complexType>
-				<xs:attribute name="value" type="nonNegativeDecimal" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="repulsion">
-			<xs:complexType>
-				<xs:attribute name="phase" type="xs:boolean" use="required"/>  <!-- true = atraction phase, false = repulsion phase -->
-				<xs:attribute name="improvementIterations" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="iteration">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="totalEnergyCalculations">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="elapsedSeconds">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="runComplete">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:boolean" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="structures" type="structuresType"/>
-		<xs:element name="individualBest" type="structuresType"/>
-	</xs:all>
-</xs:complexType>
-
-<xs:complexType name="gaType">
-	<xs:sequence>
-		<xs:element name="setup" type="gaSetupType"/>
-		<xs:element name="constraints" type="constraintsType" minOccurs="0" maxOccurs="unbounded"/>
-		<xs:element name="energy" type="energyType"/>
-		<xs:element name="resume" type="gaResumeType" minOccurs="0"/>
-		<xs:element name="results" type="resultsType" minOccurs="0"/>
-	</xs:sequence>
-	<xs:attribute name="constraints" type="xs:string"/>
-</xs:complexType>
-<xs:complexType name="gaSetupType">
-	<xs:all>
-		<xs:element name="structuresTemplate" type="structuresTemplateType"/>
-		<xs:element name="mateSelection">
-			<xs:complexType>
-				<xs:attribute name="method" type="mateSelectionType" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="mating">
-			<xs:complexType>
-				<xs:attribute name="method" type="matingMethod" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="generationReplacement">
-			<xs:complexType>
-				<xs:attribute name="method" type="generationReplacementMethod" use="required"/>
-				<xs:attribute name="value" type="percentage" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="stop" minOccurs="0">
-			<xs:complexType>
-				<xs:attribute name="iteration" type="xs:positiveInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-	</xs:all>
-	<xs:attribute name="saveFrequency" type="xs:positiveInteger" default="1"/>
-</xs:complexType>
-<xs:simpleType name="matingMethod">
-	<xs:restriction base="xs:string">
-		<xs:enumeration value="simple"/>
-	</xs:restriction>
-</xs:simpleType>
-<xs:simpleType name="generationReplacementMethod">
-	<xs:restriction base="xs:string">
-		<xs:enumeration value="parentPercentage"/>
-	</xs:restriction>
-</xs:simpleType>
-<xs:simpleType name="mateSelectionType">
-	<xs:restriction base="xs:string">
-		<xs:enumeration value="tournament"/>
-	</xs:restriction>
-</xs:simpleType>
-<xs:complexType name="gaResumeType">
-	<xs:all>
-		<xs:element name="iteration">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="totalEnergyCalculations">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="elapsedSeconds">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="runComplete">
-			<xs:complexType>
-				<xs:attribute name="value" type="xs:boolean" use="required"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="structures" type="structuresType"/>
-	</xs:all>
-</xs:complexType>
-
-
-<xs:complexType name="batchType">
-	<xs:sequence>
-		<xs:element name="setup">
-			<xs:complexType>
-				<xs:all>
-					<xs:element name="structuresTemplate" type="structuresTemplateType"/>
-				</xs:all>
-				<xs:attribute name="saveFrequency" type="xs:positiveInteger" default="1"/>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="constraints" type="constraintsType" minOccurs="0" maxOccurs="unbounded"/>
-		<xs:element name="energy" type="energyType"/>
-		<xs:element name="resume" minOccurs="0">
-			<xs:complexType>
-				<xs:all>
-					<xs:element name="totalEnergyCalculations">
-						<xs:complexType>
-							<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="elapsedSeconds">
-						<xs:complexType>
-							<xs:attribute name="value" type="xs:unsignedLong" use="required"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="runComplete">
-						<xs:complexType>
-							<xs:attribute name="value" type="xs:boolean" use="required"/>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="structures" type="structuresType"/>
-				</xs:all>
-			</xs:complexType>
-		</xs:element>
-		<xs:element name="results" type="resultsType" minOccurs="0"/>
-	</xs:sequence>
 </xs:complexType>
 
 <!-- generic simple types -->
