@@ -1,6 +1,6 @@
 
 #include "seed.h"
-#include "input.h"
+#include "../../input.h"
 
 Seed::Seed()
 {

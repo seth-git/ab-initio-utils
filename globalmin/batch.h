@@ -2,8 +2,8 @@
 #ifndef BATCH_H_
 #define BATCH_H_
 
-#include "action.h"
-#include "structure.h"
+#include "../action.h"
+#include "gmstructure.h"
 
 class Batch : public Action {
 public:

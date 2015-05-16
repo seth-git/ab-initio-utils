@@ -3,10 +3,10 @@
 #define __STRUCTURES_TEMPLATE_H_
 
 #include "atomGroupTemplate.h"
-#include "constraints.h"
+#include "../constraints.h"
 #include "seed.h"
-#include "structure.h"
-#include "random/random.h"
+#include "../gmstructure.h"
+#include "../../random/random.h"
 #include <list>
 
 // 0 = OFF, 1 = DEBUG, 2 = DEBUG VERBOSE

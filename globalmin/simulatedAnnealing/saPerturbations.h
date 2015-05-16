@@ -2,14 +2,14 @@
 #ifndef __PERTURBATIONS_H_
 #define __PERTURBATIONS_H_
 
-#include "../xsd/xsdAttributeUtil.h"
-#include "../xsd/xsdElementUtil.h"
-#include "../xsd/xsdTypeUtil.h"
-#include "../translation/strings.h"
+#include "../../xsd/xsdAttributeUtil.h"
+#include "../../xsd/xsdElementUtil.h"
+#include "../../xsd/xsdTypeUtil.h"
+#include "../../translation/strings.h"
 #include "../constraints.h"
-#include "../structure.h"
-#include "../structuresTemplate.h"
-#include "../random/random.h"
+#include "../gmstructure.h"
+#include "../initialization/structuresTemplate.h"
+#include "../../random/random.h"
 
 class SAPerturbations {
 public:

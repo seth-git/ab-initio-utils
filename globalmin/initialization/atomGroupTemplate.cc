@@ -1,7 +1,7 @@
 
 #include "atomGroupTemplate.h"
-#include "structure.h"
-#include "atomGroup.h"
+#include "../gmstructure.h"
+#include "../atomGroup.h"
 
 //const char* AtomGroupTemplate::s_molAttNames[]  = {"number", "format"};
 const bool    AtomGroupTemplate::s_molAttRequired[]        = {true    , true };

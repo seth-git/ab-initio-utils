@@ -6,8 +6,8 @@
 #include <string>
 #include <unistd.h>
 #include "action.h"
-#include "simulatedAnnealing/simulatedAnnealing.h"
-#include "batch.h"
+#include "globalmin/simulatedAnnealing/simulatedAnnealing.h"
+#include "globalmin/batch.h"
 
 #define SIMULATED_ANNEALING              0
 #define RANDOM_SEARCH                    1

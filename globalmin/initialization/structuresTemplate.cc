@@ -1,6 +1,6 @@
 
 #include "structuresTemplate.h"
-#include "random/randomc.h"
+#include "../../random/randomc.h"
 
 unsigned int StructuresTemplate::defaultMaxInitializationTries = 50;
 unsigned int StructuresTemplate::defaultMaxGroupInitializationTries = 50;

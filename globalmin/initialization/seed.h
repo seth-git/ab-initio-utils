@@ -2,13 +2,13 @@
 #ifndef __SEED_H_
 #define __SEED_H_
 
-#include "xsd/xsdAttributeUtil.h"
-#include "xsd/xsdElementUtil.h"
-#include "xsd/xsdTypeUtil.h"
-#include "translation/strings.h"
-#include "externalEnergy/externalEnergy.h"
-#include "structure.h"
-#include "constraints.h"
+#include "../../xsd/xsdAttributeUtil.h"
+#include "../../xsd/xsdElementUtil.h"
+#include "../../xsd/xsdTypeUtil.h"
+#include "../../translation/strings.h"
+#include "../../externalEnergy/externalEnergy.h"
+#include "../gmstructure.h"
+#include "../constraints.h"
 
 #include <stdio.h>
 #include <cstdlib>

@@ -5,10 +5,10 @@
 class Structure; // Forward declaration
 class AtomGroup; // Forward declaration
 
-#include "xsd/xsdAttributeUtil.h"
-#include "xsd/xsdElementUtil.h"
-#include "xsd/xsdTypeUtil.h"
-#include "translation/strings.h"
+#include "../../xsd/xsdAttributeUtil.h"
+#include "../../xsd/xsdElementUtil.h"
+#include "../../xsd/xsdTypeUtil.h"
+#include "../../translation/strings.h"
 
 #define CARTESIAN 0
 

@@ -4,7 +4,7 @@
 
 #include "settings.h"
 #include "../input.h"
-#include "../rmsDistance.h"
+#include "../globalmin/rmsDistance.h"
 #include "testinit.h"
 
 const char* testUpdateAtomToCenterRanks();

@@ -1,7 +1,7 @@
 #ifndef RMSDISTANCE_H_
 #define RMSDISTANCE_H_
 
-#include "structure.h"
+#include "gmstructure.h"
 
 class RmsDistance {
 public:

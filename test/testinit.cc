@@ -9,15 +9,15 @@
 #include <map>
 #include <string>
 
-#include "../atomGroup.h"
-#include "../batch.h"
-#include "../constraints.h"
+#include "../globalmin/atomGroup.h"
+#include "../globalmin/batch.h"
+#include "../globalmin/constraints.h"
 #include "../externalEnergy/externalEnergy.h"
 #include "../matrix/matrix.h"
 #include "../rapidxml/rapidxml.hpp"
-#include "../seed.h"
-#include "../structure.h"
-#include "../structuresTemplate.h"
+#include "../globalmin/initialization/seed.h"
+#include "../globalmin/gmstructure.h"
+#include "../globalmin/initialization/structuresTemplate.h"
 #include "../translation/strings.h"
 #include "../xsd/typedef.h"
 

@@ -4,10 +4,10 @@
 
 #include <stdio.h>
 #include <string>
-#include "xsd/xsdAttributeUtil.h"
-#include "xsd/xsdElementUtil.h"
-#include "xsd/xsdTypeUtil.h"
-#include "translation/strings.h"
+#include "../xsd/xsdAttributeUtil.h"
+#include "../xsd/xsdElementUtil.h"
+#include "../xsd/xsdTypeUtil.h"
+#include "../translation/strings.h"
 
 class Structure; // Forward declaration
 

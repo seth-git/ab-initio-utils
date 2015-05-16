@@ -2,7 +2,7 @@
 #ifndef ENERGY_H_
 #define ENERGY_H_
 
-#include "structure.h"
+#include "globalmin/gmstructure.h"
 
 class Energy {
 public:

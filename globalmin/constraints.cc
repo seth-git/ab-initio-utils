@@ -1,5 +1,5 @@
 #include "constraints.h"
-#include "structure.h"
+#include "gmstructure.h"
 
 //const char*      Constraints::s_elementNames[]     = {"cube", "atomicDistances"};
 const unsigned int Constraints::s_minOccurs[] = { 0, 0 };

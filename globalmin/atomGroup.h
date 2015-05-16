@@ -2,14 +2,14 @@
 #ifndef __ATOM_GROUP_H_
 #define __ATOM_GROUP_H_
 
-#include "xsd/xsdAttributeUtil.h"
-#include "xsd/xsdElementUtil.h"
-#include "xsd/xsdTypeUtil.h"
-#include "translation/strings.h"
-#include "atomGroupTemplate.h"
-#include "handbook/handbook.h"
+#include "../xsd/xsdAttributeUtil.h"
+#include "../xsd/xsdElementUtil.h"
+#include "../xsd/xsdTypeUtil.h"
+#include "../translation/strings.h"
+#include "initialization/atomGroupTemplate.h"
+#include "../handbook/handbook.h"
 #include <cmath>
-#include "matrix/matrix.h"
+#include "../matrix/matrix.h"
 
 #define CARTESIAN 0
 

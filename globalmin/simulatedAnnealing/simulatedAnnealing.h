@@ -2,10 +2,10 @@
 #ifndef __SIMULATED_ANNEALING_H_
 #define __SIMULATED_ANNEALING_H_
 
-#include "../action.h"
+#include "../../action.h"
 #include "saPerturbations.h"
 #include "simulatedAnnealingRun.h"
-#include "../xsd/mpiUtils.h"
+#include "../../xsd/mpiUtils.h"
 
 class SimulatedAnnealing : public Action {
 public:

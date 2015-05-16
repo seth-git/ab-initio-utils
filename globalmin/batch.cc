@@ -1,7 +1,7 @@
 
 #include "batch.h"
-#include "input.h"
-#include "xsd/mpiUtils.h"
+#include "../input.h"
+#include "../xsd/mpiUtils.h"
 #include <set>
 
 Batch::Batch(Input* input) : Action(input)

@@ -1,7 +1,7 @@
 
-#include "structure.h"
-#include "rapidxml/rapidxml_utils.hpp"
-#include "rapidxml/rapidxml_print.hpp"
+#include "gmstructure.h"
+#include "../rapidxml/rapidxml_utils.hpp"
+#include "../rapidxml/rapidxml_print.hpp"
 
 Structure::Structure() {
 	m_iNumberOfAtomGroups = 0;

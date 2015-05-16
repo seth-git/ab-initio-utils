@@ -1,6 +1,6 @@
 
 #include "simulatedAnnealing.h"
-#include "../input.h"
+#include "../../input.h"
 #include <algorithm>
 
 SimulatedAnnealing::SimulatedAnnealing(Input* input) : Action(input)

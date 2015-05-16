@@ -2,7 +2,7 @@
 #ifndef __SIMULATED_ANNEALING_RUN_H_
 #define __SIMULATED_ANNEALING_RUN_H_
 
-#include "../structure.h"
+#include "../gmstructure.h"
 
 class SimulatedAnnealing;
 

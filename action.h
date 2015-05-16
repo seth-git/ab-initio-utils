@@ -7,13 +7,13 @@ class Input; // Forward declaration
 #include "xsd/xsdAttributeUtil.h"
 #include "xsd/xsdElementUtil.h"
 #include "xsd/xsdTypeUtil.h"
-#include "structuresTemplate.h"
+#include "globalmin/initialization/structuresTemplate.h"
 #include "translation/strings.h"
 #include "energyXml.h"
 #include "energy.h"
-#include "constraints.h"
+#include "globalmin/constraints.h"
 #include "xsd/mpiUtils.h"
-#include "rmsDistance.h"
+#include "globalmin/rmsDistance.h"
 #include <list>
 
 #define ACTION_DEBUG false
