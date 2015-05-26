@@ -13,7 +13,7 @@
 	<div class="main">
 		<ol style="list-style-type: upper-roman">
 			<li ng-repeat="page in utils.pages">
-				<a ng-click="utils.toggleShow(page)" href="#">{{::page.title}}</a>
+				<a ng-click="utils.toggleShow(page)" href="#" id="{{::page.key}}">{{::page.title}}</a>
 				<div class="page" ng-show="page.show" ng-include="::'pages/' + page.key + '.html'"></div>
 			</li>
 		</ol>

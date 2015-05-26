@@ -1,0 +1,135 @@
+<div>
+  This section discussions the xml input file and provides examples. The complete list of input file options are described in the <a href="https://raw.githubusercontent.com/seth-git/ab-initio-utils/master/xsd/agml.xsd">agml.xsd</a> file which is in <a href="http://www.w3schools.com/schema/">XSD format</a>.
+
+	<br/><br/>  
+	Below is an example batch input file that reads GAMESS output files and performs a new set of calculations on their geometries using NWChem.
+
+<pre class="xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;agml version="2.0"
+      xmlns="http://sourceforge.net/projects/atomicglobalmin/"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://sourceforge.net/projects/atomicglobalmin/ agml.xsd"&gt;
+	&lt;batch&gt;
+		&lt;setup&gt;
+			&lt;structuresTemplate&gt;
+				&lt;seed&gt;
+					&lt;directory path="/some/directory/with/output/files" type="GAMMESS-US"/&gt;
+				&lt;/seed&gt;
+			&lt;/structuresTemplate&gt;
+		&lt;/setup&gt;
+		&lt;energy&gt;
+			&lt;external method="NWChem"&gt;
+				&lt;resultsDirectory path="/some/directory"/&gt;
+				&lt;header&gt;&lt;![CDATA[
+title "Nitrogen cc-pvdz SCF geometry optimization"
+geometry  
+  #atoms
+end
+basis
+  n library cc-pvdz
+end
+task scf optimize
+				]]&gt;&lt;/header&gt;
+			&lt;/external&gt;
+		&lt;/energy&gt;
+	&lt;/batch&gt;
+&lt;/agml&gt;
+</pre>
+
+  The above example reads all the files with the "gamout" file extension from the specified directory. If you need to change the file extension associated with GAMESS-US files, it's located at the top of externalEnergy/gamessUS.cc.
+  <br/><br/>
+  The header is the NWChem input file. The "#atoms" string will be replaced with a geometry.
+  <br/><br/>
+	Below is another example that generates random structures.
+<pre class="xml">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;agml version="2.0"
+      xmlns="http://sourceforge.net/projects/atomicglobalmin/"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://sourceforge.net/projects/atomicglobalmin/ agml.xsd"&gt;
+	&lt;batch&gt;
+		&lt;setup&gt;
+			&lt;structuresTemplate constraints="const"&gt;
+				&lt;structureTemplate&gt;
+					&lt;moleculeTemplate&gt;
+						&lt;![CDATA[
+C -2.646636 -1.062747 -0.826172
+H -2.119982 -2.001828 -0.71049
+H -3.641961 -1.101236 -1.253241
+C -2.111713 0.099834 -0.464456
+H -2.678377 1.017862 -0.603423
+C -0.750835 0.322832 0.142508
+O -0.067373 -1.001838 0.105605
+C 0.095247 1.231857 -0.794368
+H -0.461842 2.164024 -0.930859
+H 0.171239 0.73664 -1.769275
+C -0.831198 0.863314 1.563463
+H -1.313463 0.140349 2.22324
+H 0.159542 1.102554 1.943679
+H -1.43132 1.776562 1.552151
+O 0.761868 -1.229237 1.100385
+O 1.355158 1.567601 -0.273791
+H 1.981122 0.839765 -0.438313
+]]&gt;
+					&lt;/moleculeTemplate&gt;
+					&lt;moleculeTemplate number="2"&gt;
+						&lt;![CDATA[
+H 0.757540797781 0 0.587079636589
+H -0.757540797781 0 0.587079636589
+O 0 0 0
+]]&gt;
+					&lt;/moleculeTemplate&gt;
+					&lt;atomTemplate Z="H"/&gt;
+				&lt;/structureTemplate&gt;
+				&lt;linear number="50"/&gt;
+				&lt;planar number="50"/&gt;
+				&lt;threeD number="100"/&gt;
+			&lt;/structuresTemplate&gt;
+		&lt;/setup&gt;
+		&lt;constraints name="const"&gt;
+			&lt;cube size="10"/&gt;
+			&lt;atomicDistances&gt;
+				&lt;min value="0.7"/&gt;
+				&lt;min value="0.9" Z1="O" Z2="H"/&gt;
+				&lt;max value="2.7"/&gt;
+			&lt;/atomicDistances&gt;
+		&lt;/constraints&gt;
+		&lt;energy&gt;
+			&lt;external method="Gaussian" wallTime="24:00:00"&gt;
+				&lt;temporaryDirectory path="/optional/directory" /&gt;
+				&lt;resultsDirectory path="/full/path" maxFiles="10"/&gt;
+				&lt;header&gt;&lt;![CDATA[
+% mem=2000MB
+# B3LYP/6-311++G(d,p) scfcon=4 scfcyc=300 scf=direct
+
+1 2
+!atoms
+				]]&gt;&lt;/header&gt;
+			&lt;/external&gt;
+		&lt;/energy&gt;
+		&lt;results orderBy="energy" rmsDistance="0.00001" maxSize="1000" /&gt;
+	&lt;/batch&gt;
+&lt;/agml&gt;
+</pre>
+
+	The first moleculeTemplate element has an Isoprene Hydroxyalkyl Peroxy Radical. The second has a water molecule with the number attribute indicating there are two of them. The atomTemplate element specifies hydrogen, so total there are four atomic groups.
+	<br/><br/>
+	The program will perform translation and rotation of these four groups. It will generate 200 structures: 50 linear, 50 planar, and 100 three dimensional.
+	The linear structures have their centers of mass in a line, while the planer structures have their centers of mass in a plane.
+	<br/><br/>
+	The structuresTemplate element has a constraints attribute with the value "const". This value matches the name of the constraints element below it.
+	Constraints include a cube container of length, width, and height 10, a general minimum atomic distance constraint of 0.7, a general maximum distance constraint of 2.7, and a minimum distance constraint between hydrogen and oxygen of 0.9. Units are in angstroms.
+  <br/><br/>
+  This example also has a wallTime. This optional attribute and has the format hours, minutes, seconds HH::MM:SS. If specified, it will stop the calculation after the specified time and store the results calculated thus far in the xml file. This can be useful if using a public cluster on which you have limited time, and where you want clean program termination. You can also stop the run manually at any time by creating a blank "stop" file inside the resultsDirectory.
+	<br/><br/>
+  The optional temporaryDirectory element can be used to specify a local hard drive that is local to each node and is not accessible by other nodes. After calculations are performed here, the results files are copied to the directory specified via the resultsDirectory element which must be on a network drive. The resultsDirectory element has an optional maxFiles attribute which indicates that no more than 10 files should be stored in that directory.
+	<br/><br/>
+  The header element stores the Gaussian input file. The geometry will replace the "!atoms" text.
+	<br/><br/>
+	At the end is a results element. As calculations finish, structures will be stored in this element with their energy values. The results element has three optional attributes. The first is orderBy which can have the values "energy", "filePrefix", and "id". The "energy" value is the default if no orderBy attribute is specified. When rewriting the xml file, defaults are always omitted. The filePrefix is essentially the file name without the file extension, and the id is just a number assigned to each structure.
+	The second attribute is root-mean-square (RSM) distance. It specifies that all structures must be at least this distance from one another. When two structures are closer than this, the one that comes later in the results list will be removed. Since orderBy="energy", the structure with higher energy is removed. For a description of how RMS distance is calculated on two structures see:
+	<br/><br/>
+	Call, S. T.; Boldyrev, A. I., Zubarev, D. Y. Global minimum structure searches via particle swarm optimization. J. Comput. Chem. 2007, 28, 1177–1186. 
+	<br/><br/>
+	The third attribute on the results element is maxSize. It specifies that no more than 1000 structures should be stored in the results element in the xml file.
+</div>
