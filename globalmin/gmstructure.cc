@@ -5,8 +5,6 @@
 
 Structure::Structure() {
 	m_iNumberOfAtomGroups = 0;
-	m_atomGroups = NULL;
-	m_atomGroupIndices = NULL;
 	m_iNumberOfAtoms = 0;
 	m_atomCoordinates = NULL;
 	m_localAtomCoordinates = NULL;
@@ -57,15 +55,6 @@ void Structure::clear() {
 	}
 
 	m_iNumberOfAtomGroups = 0;
-	if (m_atomGroups != NULL) {
-		delete[] m_atomGroups;
-		m_atomGroups = NULL;
-	}
-
-	if (m_atomGroupIndices != NULL) {
-		delete[] m_atomGroupIndices;
-		m_atomGroupIndices = NULL;
-	}
 
 	if (NULL != m_atomToCenterRanks) {
 		delete[] m_atomToCenterRanks;
@@ -107,7 +96,8 @@ bool Structure::load(const rapidxml::xml_node<>* pStructureElem) {
 	std::vector<const xml_node<>*>* structureElements = structureElemUtil.getSequenceElements();
 	std::vector<const xml_node<>*>* atomGroups = &(structureElements[0]);
 	m_iNumberOfAtomGroups = atomGroups->size();
-	m_atomGroups = new AtomGroup[m_iNumberOfAtomGroups];
+	m_atomGroups = std::make_unique<AtomGroup[]>(m_iNumberOfAtomGroups);
+
 	m_iNumberOfAtoms = 0;
 	for (unsigned int i = 0; i < m_iNumberOfAtomGroups; ++i) {
 		if (!m_atomGroups[i].load((*atomGroups)[i]))
@@ -181,15 +171,15 @@ void Structure::copy(const Structure &structure) {
 
 	m_sFilePrefix = structure.m_sFilePrefix;
 	m_iNumberOfAtomGroups = structure.m_iNumberOfAtomGroups;
-	m_atomGroups = new AtomGroup[m_iNumberOfAtomGroups];
+	m_atomGroups = std::make_unique<AtomGroup[]>(m_iNumberOfAtomGroups);
 	for (unsigned int i = 0; i < m_iNumberOfAtomGroups; ++i)
 		m_atomGroups[i].copy(structure.m_atomGroups[i]);
 
 	m_iNumberOfAtoms = structure.m_iNumberOfAtoms;
 	initCoordinateRefs();
 
-	if (NULL != structure.m_atomGroupIndices) {
-		memcpy(m_atomGroupIndices, structure.m_atomGroupIndices, sizeof(unsigned int) * m_iNumberOfAtomGroups);
+	if (structure.m_atomGroupIndices) {
+		memcpy(m_atomGroupIndices.get(), structure.m_atomGroupIndices.get(), sizeof(unsigned int) * m_iNumberOfAtomGroups);
 	}
 	if (NULL != structure.m_atomDistanceMatrix) {
 		size_t nbytes = sizeof(FLOAT) * m_iNumberOfAtoms;
@@ -218,7 +208,7 @@ void Structure::setAtoms(unsigned int numAtoms,
 		clear();
 		m_iNumberOfAtoms = numAtoms;
 		m_iNumberOfAtomGroups = 1;
-		m_atomGroups = new AtomGroup[m_iNumberOfAtomGroups];
+		m_atomGroups = std::make_unique<AtomGroup[]>(m_iNumberOfAtomGroups);
 		m_atomGroups[0].setAtoms(numAtoms, cartesianPoints, atomicNumbers);
 		initCoordinateRefs();
 	} else {
@@ -243,7 +233,7 @@ void Structure::setAtomGroups(unsigned int numAtomGroupTemplates, const AtomGrou
 		iNumberOfAtomGroups += agtemp->m_iNumber;
 		iNumberOfAtoms += agtemp->m_iNumber * agtemp->m_atomicNumbers.size();
 	}
-	AtomGroup* atomGroups = new AtomGroup[iNumberOfAtomGroups];
+	std::unique_ptr<AtomGroup[]> atomGroups = std::make_unique<AtomGroup[]>(iNumberOfAtomGroups);
 
 	if (atomsMatch(numAtomGroupTemplates, atomGroupTemplates)) {
 		// Assume this is a seeded structure and keep the same coordinates
@@ -274,7 +264,7 @@ void Structure::setAtomGroups(unsigned int numAtomGroupTemplates, const AtomGrou
 	clear();
 	m_iNumberOfAtomGroups = iNumberOfAtomGroups;
 	m_iNumberOfAtoms = iNumberOfAtoms;
-	m_atomGroups = atomGroups;
+	m_atomGroups = std::move(atomGroups);
 	initCoordinateRefs();
 }
 
@@ -305,7 +295,7 @@ bool Structure::atomsMatch(unsigned int numAtomGroupTemplates,
 
 void Structure::insertAtomGroup(AtomGroupTemplate &atomGroupTemplate, unsigned int index) {
 	unsigned int iNumberOfAtomGroups = m_iNumberOfAtomGroups + 1;
-	AtomGroup* atomGroups = new AtomGroup[iNumberOfAtomGroups];
+	std::unique_ptr<AtomGroup[]> atomGroups = std::make_unique<AtomGroup[]>(iNumberOfAtomGroups);
 	unsigned int iNumberOfAtoms = m_iNumberOfAtoms+atomGroupTemplate.m_atomicNumbers.size();
 
 	unsigned int i;
@@ -318,13 +308,13 @@ void Structure::insertAtomGroup(AtomGroupTemplate &atomGroupTemplate, unsigned i
 	clear();
 	m_iNumberOfAtomGroups = iNumberOfAtomGroups;
 	m_iNumberOfAtoms = iNumberOfAtoms;
-	m_atomGroups = atomGroups;
+	m_atomGroups = std::move(atomGroups);
 	initCoordinateRefs();
 }
 
 void Structure::deleteAtomGroup(unsigned int index) {
 	unsigned int iNumberOfAtomGroups = m_iNumberOfAtomGroups - 1;
-	AtomGroup* atomGroups = new AtomGroup[iNumberOfAtomGroups];
+	std::unique_ptr<AtomGroup[]> atomGroups = std::make_unique<AtomGroup[]>(iNumberOfAtomGroups);
 	unsigned int iNumberOfAtoms = m_iNumberOfAtoms - m_atomGroups[index].getNumberOfAtoms();
 
 	unsigned int i;
@@ -336,7 +326,7 @@ void Structure::deleteAtomGroup(unsigned int index) {
 	clear();
 	m_iNumberOfAtomGroups = iNumberOfAtomGroups;
 	m_iNumberOfAtoms = iNumberOfAtoms;
-	m_atomGroups = atomGroups;
+	m_atomGroups = std::move(atomGroups);
 	initCoordinateRefs();
 }
 
@@ -368,7 +358,8 @@ void Structure::initCoordinateRefs() {
 	for (i = 0; i < m_iNumberOfAtoms; ++i)
 		m_atomDistanceMatrix[i] = new FLOAT[m_iNumberOfAtoms];
 
-	m_atomGroupIndices = new unsigned int[m_iNumberOfAtomGroups];
+	m_atomGroupIndices = std::make_unique<unsigned int[]>(m_iNumberOfAtomGroups);
+
 	j = 0;
 	for (i = 0; i < m_iNumberOfAtomGroups; ++i) {
 		m_atomGroupIndices[i] = j;

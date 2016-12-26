@@ -11,6 +11,7 @@
 #define __TYPEDEF_H__
 
 #include <cstring>
+#include <memory>
 
 #define PRINT_CATCH_MESSAGES true
 

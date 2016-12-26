@@ -1,4 +1,4 @@
-env = Environment(CCFLAGS='-g -Wall -O3',LIBS='-lrt',CXX = 'mpiCC')
+env = Environment(CPPFLAGS='-Wall -O3',LIBS='-lrt',CXX = 'mpiCC',CXXFLAGS = '-std=c++14')
 random = Split('random/mersenne.cpp random/random.cc')
 src = [Glob('*.cc'),
        Glob('translation/*.cc'),

@@ -897,7 +897,7 @@ StructuresTemplate::InitResult StructuresTemplate::placeAtomGroupRelativeToAnoth
 				y = Random::getFloat(minDistanceBetweenAtoms,maxDist);
 			e = sqrt((y * y) - (x * x)) + a + b;
 		}
-		if (isnan(e))
+		if (std::isnan(e))
 		{
 			printf("e = nan in the function StructuresTemplate::placeAtomGroupRelativeToAnother!\n");
 			return PlaceAtomGroupRelativeToAnotherMethodFailed;
@@ -924,7 +924,7 @@ StructuresTemplate::InitResult StructuresTemplate::placeAtomGroupRelativeToAnoth
 				vector[i] = unitVector[i] * e;
 				center[i] = otherCenter[i] + vector[i];
 			}
-			if (isnan(center[0]))
+			if (std::isnan(center[0]))
 			{
 				printf("center[0] = nan in the function StructuresTemplate::placeAtomGroupRelativeToAnother!\n");
 				return PlaceAtomGroupRelativeToAnotherMethodFailed;

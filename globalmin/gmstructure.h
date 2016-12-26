@@ -21,8 +21,8 @@ public:
 	std::string m_sFilePrefix;
 protected:
 	unsigned int m_iNumberOfAtomGroups;
-	AtomGroup* m_atomGroups;
-	unsigned int* m_atomGroupIndices; // array giving the starting atom index of each atom group
+	std::unique_ptr<AtomGroup[]> m_atomGroups;
+	std::unique_ptr<unsigned int[]> m_atomGroupIndices; // array giving the starting atom index of each atom group
 	unsigned int m_iNumberOfAtoms;
 	const COORDINATE4** m_atomCoordinates; // array with each element pointing to a COORDINATE4
 	const COORDINATE4** m_localAtomCoordinates; // array with each element pointing to a COORDINATE4 (untranslated and unrotated)
@@ -86,7 +86,7 @@ public:
 	void deleteAtomGroup(unsigned int index);
 
 	unsigned int getNumberOfAtomGroups() const { return m_iNumberOfAtomGroups; }
-	const AtomGroup* getAtomGroups() const { return m_atomGroups; }
+	const AtomGroup* getAtomGroups() const { return m_atomGroups.get(); }
 	AtomGroup* getAtomGroup(unsigned int index) { return &(m_atomGroups[index]); } // be careful with this method
 	unsigned int getNumberOfAtoms() const { return m_iNumberOfAtoms; }
 	const unsigned int* getAtomicNumbers() const { return m_atomicNumbers; }
@@ -149,7 +149,7 @@ public:
 	 * Returns: an array of size getNumberOfAtomGroups() where each value is
 	 *    an index for getAtomicNumbers() or getAtomCoordinates() for a group.
 	 *************************************************************************/
-	const unsigned int* getAtomGroupIndices() { return m_atomGroupIndices; }
+	const unsigned int* getAtomGroupIndices() { return m_atomGroupIndices.get(); }
 
 	static unsigned int PRINT_RADIANS;
 	static unsigned int PRINT_ENERGY;

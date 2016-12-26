@@ -16,9 +16,9 @@
 class AtomGroup {
 protected:
 	unsigned int m_iNumberOfAtoms;
-	unsigned int* m_atomicNumbers;
-	COORDINATE4* m_localPoints;
-	COORDINATE4* m_globalPoints;
+	std::unique_ptr<unsigned int[]> m_atomicNumbers;
+	std::unique_ptr<COORDINATE4[]> m_localPoints;
+	std::unique_ptr<COORDINATE4[]> m_globalPoints;
 
 	COORDINATE3 m_centerOfMass;
 	COORDINATE3 m_angles;
@@ -43,7 +43,6 @@ protected:
 
 public:
 	AtomGroup();
-	~AtomGroup();
 	void setAtoms(const AtomGroupTemplate &atomGroupTemplate);
 	void setAtoms(unsigned int numAtoms, const COORDINATE4* cartesianPoints,
 			const unsigned int* atomicNumbers);
@@ -61,9 +60,9 @@ public:
 	const FLOAT* getAngles() const { return m_angles; }
 	void setAngles(COORDINATE3 angles) { memcpy(m_angles, angles, SIZEOF_COORDINATE3); }
 
-	const COORDINATE4* getLocalAtomCoordinates() const { return m_localPoints; }
-	const COORDINATE4* getGlobalAtomCoordinates() const { return m_globalPoints; }
-	const unsigned int* getAtomicNumbers() const { return m_atomicNumbers; }
+	const COORDINATE4* getLocalAtomCoordinates() const { return m_localPoints.get(); }
+	const COORDINATE4* getGlobalAtomCoordinates() const { return m_globalPoints.get(); }
+	const unsigned int* getAtomicNumbers() const { return m_atomicNumbers.get(); }
 
 	void setFrozen(bool newValue) { m_bFrozen = newValue; }
 	bool getFrozen() const { return m_bFrozen; }

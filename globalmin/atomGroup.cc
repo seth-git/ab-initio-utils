@@ -4,31 +4,11 @@
 AtomGroup::AtomGroup()
 {
 	m_iNumberOfAtoms = 0;
-	m_atomicNumbers = NULL;
-	m_localPoints = NULL;
-	m_globalPoints = NULL;
-}
-
-AtomGroup::~AtomGroup()
-{
-	clear();
 }
 
 void AtomGroup::clear()
 {
 	m_iNumberOfAtoms = 0;
-	if (m_atomicNumbers != NULL) {
-		delete[] m_atomicNumbers;
-		m_atomicNumbers = NULL;
-	}
-	if (m_localPoints != NULL) {
-		delete[] m_localPoints;
-		m_localPoints = NULL;
-	}
-	if (m_globalPoints != NULL) {
-		delete[] m_globalPoints;
-		m_globalPoints = NULL;
-	}
 	std::fill_n(m_centerOfMass, 3, 0);
 	std::fill_n(m_angles, 3, 0);
 	m_bFrozen = false;
@@ -40,9 +20,10 @@ void AtomGroup::setAtoms(const AtomGroupTemplate &agTemplate)
 
 	clear();
 	m_iNumberOfAtoms = agTemplate.m_atomicNumbers.size();
-	m_atomicNumbers = new unsigned int[m_iNumberOfAtoms];
-	m_localPoints = new COORDINATE4[m_iNumberOfAtoms];
-	m_globalPoints = new COORDINATE4[m_iNumberOfAtoms];
+	m_atomicNumbers = std::make_unique<unsigned int[]>(m_iNumberOfAtoms);
+	m_localPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
+	m_localPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
+	m_globalPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
 
 	for (i = 0; i < m_iNumberOfAtoms; ++i)
 	{
@@ -52,7 +33,7 @@ void AtomGroup::setAtoms(const AtomGroupTemplate &agTemplate)
 	}
 
 	COORDINATE3 centerOfMass;
-	getCenterOfMass(m_iNumberOfAtoms, m_atomicNumbers, m_localPoints, centerOfMass);
+	getCenterOfMass(m_iNumberOfAtoms, m_atomicNumbers.get(), m_localPoints.get(), centerOfMass);
 	for (i = 0; i < m_iNumberOfAtoms; ++i)
 		for (j = 0; j < 3; ++j)
 			m_localPoints[i][j] -= centerOfMass[j];
@@ -87,16 +68,16 @@ void AtomGroup::setAtoms(unsigned int numAtoms, const COORDINATE4* cartesianPoin
 	if (numAtoms != m_iNumberOfAtoms) {
 		clear();
 		m_iNumberOfAtoms = numAtoms;
-		m_atomicNumbers = new unsigned int[m_iNumberOfAtoms];
-		m_localPoints = new COORDINATE4[m_iNumberOfAtoms];
-		m_globalPoints = new COORDINATE4[m_iNumberOfAtoms];
+		m_atomicNumbers = std::make_unique<unsigned int[]>(m_iNumberOfAtoms);
+		m_localPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
+		m_globalPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
 	}
 
-	memcpy(m_atomicNumbers, atomicNumbers, sizeof(unsigned int) * m_iNumberOfAtoms);
-	memcpy(m_globalPoints, cartesianPoints, SIZEOF_COORDINATE4 * m_iNumberOfAtoms);
-	memcpy(m_localPoints, cartesianPoints, SIZEOF_COORDINATE4 * m_iNumberOfAtoms);
+	memcpy(m_atomicNumbers.get(), atomicNumbers, sizeof(unsigned int) * m_iNumberOfAtoms);
+	memcpy(m_globalPoints.get(), cartesianPoints, SIZEOF_COORDINATE4 * m_iNumberOfAtoms);
+	memcpy(m_localPoints.get(), cartesianPoints, SIZEOF_COORDINATE4 * m_iNumberOfAtoms);
 
-	getCenterOfMass(m_iNumberOfAtoms, m_atomicNumbers, m_localPoints, m_centerOfMass);
+	getCenterOfMass(m_iNumberOfAtoms, m_atomicNumbers.get(), m_localPoints.get(), m_centerOfMass);
 	for (i = 0; i < m_iNumberOfAtoms; ++i)
 		for (j = 0; j < 3; ++j)
 			m_localPoints[i][j] -= m_centerOfMass[j];
@@ -134,9 +115,9 @@ bool AtomGroup::load(const rapidxml::xml_node<>* pAtomGroupElem)
 	std::vector<const xml_node<>*>* atomGroupElements = atomGroupElemUtil.getSequenceElements();
 
 	m_iNumberOfAtoms = atomGroupElements[2].size();
-	m_atomicNumbers = new unsigned int[m_iNumberOfAtoms];
-	m_localPoints = new COORDINATE4[m_iNumberOfAtoms];
-	m_globalPoints = new COORDINATE4[m_iNumberOfAtoms];
+	m_atomicNumbers = std::make_unique<unsigned int[]>(m_iNumberOfAtoms);
+	m_localPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
+	m_globalPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
 
 	const char* atomAttNames[] = {xBigZ, xX, xY, xZ};
 
@@ -260,12 +241,12 @@ void AtomGroup::copy(AtomGroup &atomGroup) {
 	clear();
 
 	m_iNumberOfAtoms = atomGroup.m_iNumberOfAtoms;
-	m_atomicNumbers = new unsigned int[m_iNumberOfAtoms];
-	memcpy(m_atomicNumbers, atomGroup.m_atomicNumbers, sizeof(unsigned int) * m_iNumberOfAtoms);
-	m_localPoints = new COORDINATE4[m_iNumberOfAtoms];
-	memcpy(m_localPoints, atomGroup.m_localPoints, SIZEOF_COORDINATE4 * m_iNumberOfAtoms);
-	m_globalPoints = new COORDINATE4[m_iNumberOfAtoms];
-	memcpy(m_globalPoints, atomGroup.m_globalPoints, SIZEOF_COORDINATE4 * m_iNumberOfAtoms);
+	m_atomicNumbers = std::make_unique<unsigned int[]>(m_iNumberOfAtoms);
+	memcpy(m_atomicNumbers.get(), atomGroup.m_atomicNumbers.get(), sizeof(unsigned int) * m_iNumberOfAtoms);
+	m_localPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
+	memcpy(m_localPoints.get(), atomGroup.m_localPoints.get(), SIZEOF_COORDINATE4 * m_iNumberOfAtoms);
+	m_globalPoints = std::make_unique<COORDINATE4[]>(m_iNumberOfAtoms);
+	memcpy(m_globalPoints.get(), atomGroup.m_globalPoints.get(), SIZEOF_COORDINATE4 * m_iNumberOfAtoms);
 
 	memcpy(m_centerOfMass, atomGroup.m_centerOfMass, SIZEOF_COORDINATE3);
 	memcpy(m_angles, atomGroup.m_angles, SIZEOF_COORDINATE3);
