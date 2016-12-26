@@ -11,4 +11,4 @@ src = [Glob('*.cc'),
        Glob('globalmin/initialization/*.cc'),
        Glob('globalmin/simulatedAnnealing/*.cc')
       ] + random
-env.Program(target = 'agml', source = src)
+env.Program(target = 'aiu', source = src)

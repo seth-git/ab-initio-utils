@@ -175,11 +175,11 @@ Navigate to the aiu/test directory and type 'scons' to compile the unit tests, t
 
 To run a batch input file type '..' to navigate out of the test directory. Then type the following:
 
-    ./agml xml/LJ7_Batch.xml
+    ./aiu xml/LJ7_Batch.xml
 
 This generates 100 random Lennard Jones structures with 7 noble gas atoms, calculates their energy values, and stores them back in the xml file. To perform the same run again, you must first delete the resume and result elements from the xml/LJ7_Batch.xml file.
 
 To run the same job in parallel on two processors, type the following:
 
-    mpirun -np 2 agml xml/LJ7_Batch.xml
+    mpirun -np 2 aiu xml/LJ7_Batch.xml
 

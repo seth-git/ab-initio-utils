@@ -6,8 +6,6 @@
 Structure::Structure() {
 	m_iNumberOfAtomGroups = 0;
 	m_iNumberOfAtoms = 0;
-	m_atomCoordinates = NULL;
-	m_localAtomCoordinates = NULL;
 	m_atomicNumbers = NULL;
 	m_atomDistanceMatrix = NULL;
 	m_atomGroupDistanceMatrix = NULL;
@@ -34,14 +32,6 @@ void Structure::clear() {
 	}
 
 	m_iNumberOfAtoms = 0;
-	if (m_atomCoordinates != NULL) {
-		delete[] m_atomCoordinates;
-		m_atomCoordinates = NULL;
-	}
-	if (m_localAtomCoordinates != NULL) {
-		delete[] m_localAtomCoordinates;
-		m_localAtomCoordinates = NULL;
-	}
 	if (m_atomicNumbers != NULL) {
 		delete[] m_atomicNumbers;
 		m_atomicNumbers = NULL;
@@ -337,8 +327,8 @@ void Structure::initCoordinateRefs() {
 	// If this isn't the case, memory leaks may result.
 
 	unsigned int i, j, k, n;
-	m_atomCoordinates = new const COORDINATE4*[m_iNumberOfAtoms];
-	m_localAtomCoordinates = new const COORDINATE4*[m_iNumberOfAtoms];
+	m_atomCoordinates = std::make_unique<const COORDINATE4*[]>(m_iNumberOfAtoms);
+	m_localAtomCoordinates = std::make_unique<const COORDINATE4*[]>(m_iNumberOfAtoms);
 	m_atomicNumbers = new unsigned int[m_iNumberOfAtoms];
 	const COORDINATE4* coordinates;
 	const COORDINATE4* localCoordinates;

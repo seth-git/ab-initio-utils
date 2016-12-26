@@ -24,8 +24,8 @@ protected:
 	std::unique_ptr<AtomGroup[]> m_atomGroups;
 	std::unique_ptr<unsigned int[]> m_atomGroupIndices; // array giving the starting atom index of each atom group
 	unsigned int m_iNumberOfAtoms;
-	const COORDINATE4** m_atomCoordinates; // array with each element pointing to a COORDINATE4
-	const COORDINATE4** m_localAtomCoordinates; // array with each element pointing to a COORDINATE4 (untranslated and unrotated)
+	std::unique_ptr<const COORDINATE4*[]> m_atomCoordinates; // array with each element pointing to a COORDINATE4
+	std::unique_ptr<const COORDINATE4*[]> m_localAtomCoordinates; // array with each element pointing to a COORDINATE4 (untranslated and unrotated)
 	unsigned int* m_atomicNumbers;
 	FLOAT** m_atomDistanceMatrix;
 	FLOAT** m_atomGroupDistanceMatrix;
@@ -90,8 +90,8 @@ public:
 	AtomGroup* getAtomGroup(unsigned int index) { return &(m_atomGroups[index]); } // be careful with this method
 	unsigned int getNumberOfAtoms() const { return m_iNumberOfAtoms; }
 	const unsigned int* getAtomicNumbers() const { return m_atomicNumbers; }
-	const COORDINATE4* const* getAtomCoordinates() const { return (const COORDINATE4* const*) m_atomCoordinates; }
-	const COORDINATE4* const* getLocalAtomCoordinates() const { return (const COORDINATE4* const*) m_localAtomCoordinates; } // Untranslated and unrotated
+	const COORDINATE4* const* getAtomCoordinates() const { return (const COORDINATE4* const*) m_atomCoordinates.get(); }
+	const COORDINATE4* const* getLocalAtomCoordinates() const { return (const COORDINATE4* const*) m_localAtomCoordinates.get(); } // Untranslated and unrotated
 	const FLOAT* const* getAtomDistanceMatrix() const { return (const FLOAT* const*)m_atomDistanceMatrix; }
 	const FLOAT* const* getAtomGroupDistanceMatrix() const { return (const FLOAT* const*)m_atomGroupDistanceMatrix; }
 
