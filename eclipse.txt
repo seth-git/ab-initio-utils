@@ -1,0 +1,1 @@
+This contains brief instructions for setting up an integrated development environment making it easier to make changes to the project. I installed Eclipse Mars from http://www.eclipse.org/downloads/packages/eclipse-ide-cc-developers/mars2 . I then installed a CTD package using the appropriate URL from https://eclipse.org/cdt/downloads.php .
