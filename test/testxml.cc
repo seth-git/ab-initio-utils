@@ -13,17 +13,17 @@ char* readFileToString(const char* fileName) {
 	size_t fsize = ftell(f);
 	fseek(f, 0, SEEK_SET);
 
-	char* string = (char*)malloc(fsize + 1);
-	size_t size_read = fread(string, fsize, 1, f);
-	if (size_read != 1) {
-		delete[] string;
+	char* str = (char*)malloc(fsize + 1);
+	size_t size_read = fread(str, 1, fsize, f);
+	if (size_read < fsize) {
+		free(str);
 		printf("Error reading file: %s, fread returned %zu\n", fileName, size_read);
 		return NULL;
 	}
 	fclose(f);
 
-	string[fsize] = 0;
-	return string;
+	str[fsize] = 0;
+	return str;
 }
 
 const char* xmlTest(const char* testName, const char* failMessage, const char* fileName, const char* fileName2) {
@@ -52,8 +52,8 @@ const char* xmlTest(const char* testName, const char* failMessage, const char* f
 		return testName;
 	}
 	bool same = strcmp(file1Text, file2Text) == 0;
-	delete[] file1Text;
-	delete[] file2Text;
+	free(file1Text);
+	free(file2Text);
 	if (!same) {
 		puts(failMessage);
 		printf("Error: files should be identical, but they're not: '%s' and '%s'.\n", inputFile.c_str(), inputFile2.c_str());

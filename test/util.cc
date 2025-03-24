@@ -5,6 +5,9 @@ FLOAT** getDistanceMatrix(const Structure &structure, bool globalOrLocal) {
 	unsigned int i, j, k;
 	COORDINATE3 diff;
 	FLOAT** matrix;
+	if (structure.getNumberOfAtoms() == 0) {
+		throw std::runtime_error("Structure has no atoms");
+	}
 	matrix = new FLOAT*[structure.getNumberOfAtoms()];
 	const COORDINATE4* const* coordinates;
 	if (globalOrLocal)
