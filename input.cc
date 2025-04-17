@@ -48,7 +48,7 @@ bool Input::loadStr(char* xml) {
 	xml_document<> doc;
 	try {
 		doc.parse<parse_validate_closing_tags>(xml);
-	} catch (parse_error e) {
+	} catch (const parse_error& e) {
 		printf("XML parsing error: %s\n", e.what());
 //		printf(e.where());
 		return false;
